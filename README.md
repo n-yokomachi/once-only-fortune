@@ -1,19 +1,19 @@
-# Once Only Fortune (おみくじ)
+# Once Only Fortune
 
-一度しか引けない自己破壊型おみくじアプリ。
+A self-destructing fortune telling app. Draw your fortune once, then watch the code burn.
 
-## 概要
+## Overview
 
-このアプリは、おみくじを引くと**ソースコード自体が破壊される**という特徴を持っています。一度おみくじを引くと、アプリのソースファイルが順番に上書きされ、二度と動かなくなります。
+This app has a unique feature: when you draw a fortune, **the source code itself gets destroyed**. After drawing your fortune, the app's source files are overwritten one by one, and the app will never work again.
 
-## 技術スタック
+## Tech Stack
 
 - React + TypeScript
 - Vite
 - Tailwind CSS
-- Express (バックエンドサーバー)
+- Express (backend server)
 
-## インストール
+## Installation
 
 ```bash
 git clone https://github.com/n-yokomachi/once-only-fortune.git
@@ -21,18 +21,18 @@ cd once-only-fortune
 npm install
 ```
 
-## 起動
+## Usage
 
 ```bash
 npm start
 ```
 
-- フロントエンド: http://localhost:5173
-- サーバー: http://localhost:3001
+- Frontend: http://localhost:5173
+- Server: http://localhost:3001
 
-## 自己破壊の仕組み
+## How Self-Destruction Works
 
-おみくじを引くと、以下のファイルが順番に破壊されます:
+When you draw a fortune, the following files are destroyed in sequence:
 
 1. `src/App.tsx`
 2. `src/main.tsx`
@@ -40,19 +40,19 @@ npm start
 4. `index.html`
 5. `vite.config.ts`
 6. `package.json`
-7. `server.js` (最後に自分自身も破壊)
+7. `server.js` (destroys itself last)
 
-破壊後は `git checkout .` で復元できます。
+After destruction, you can restore with `git checkout .`
 
-## おみくじの結果
+## Fortune Results
 
-- 大吉
-- 中吉
-- 小吉
-- 吉
-- 末吉
-- 凶
-- 大凶
+- Daikichi (Great Blessing)
+- Chukichi (Middle Blessing)
+- Shokichi (Small Blessing)
+- Kichi (Blessing)
+- Suekichi (Future Blessing)
+- Kyo (Curse)
+- Daikyo (Great Curse)
 
 ## License
 
