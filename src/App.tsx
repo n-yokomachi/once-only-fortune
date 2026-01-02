@@ -1,33 +1,4 @@
 import { useState } from 'react';
-import {
-  ChakraProvider,
-  Box,
-  VStack,
-  Heading,
-  Text,
-  Button,
-  Container,
-  Alert,
-  defaultSystem,
-} from '@chakra-ui/react';
-import { css, keyframes } from '@emotion/react';
-
-const shake = keyframes`
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
-`;
-
-const glow = keyframes`
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-  50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
-`;
-
-const burn = keyframes`
-  0% { opacity: 1; filter: brightness(1); }
-  50% { opacity: 0.5; filter: brightness(2) sepia(1) saturate(5); }
-  100% { opacity: 0; filter: brightness(0); }
-`;
 
 interface Fortune {
   result: string;
@@ -74,134 +45,103 @@ function App() {
   };
 
   return (
-    <ChakraProvider value={defaultSystem}>
-      <Box
-        minH="100vh"
-        bgGradient="to-b"
-        gradientFrom="purple.900"
-        gradientTo="gray.900"
-        py={10}
-        css={isDestroying ? css`animation: ${burn} 5s forwards;` : undefined}
-      >
-        <Container maxW="md">
-          <VStack gap={8}>
-            <VStack gap={2}>
-              <Text fontSize="6xl">⛩️</Text>
-              <Heading
-                color="yellow.300"
-                fontSize="4xl"
-                textShadow="0 0 10px rgba(255, 215, 0, 0.5)"
+    <div
+      className={`min-h-screen bg-gradient-to-b from-purple-900 to-gray-900 py-10 ${
+        isDestroying ? 'animate-burn' : ''
+      }`}
+    >
+      <div className="max-w-md mx-auto px-4">
+        <div className="flex flex-col items-center gap-8">
+          {/* ヘッダー */}
+          <div className="text-center">
+            <div className="text-6xl mb-2">⛩️</div>
+            <h1
+              className="text-4xl font-bold text-yellow-300"
+              style={{ textShadow: '0 0 10px rgba(255, 215, 0, 0.5)' }}
+            >
+              おみくじ
+            </h1>
+          </div>
+
+          {/* エラー表示 */}
+          {error && (
+            <div className="bg-red-900 border border-red-600 rounded-lg p-4 w-full">
+              <div className="flex items-center gap-2">
+                <span className="text-red-400">⚠️</span>
+                <div>
+                  <div className="font-bold text-red-200">エラー</div>
+                  <div className="text-red-300 text-sm">{error}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* おみくじを引く前 */}
+          {!fortune && !error && (
+            <div className="flex flex-col items-center gap-6">
+              <div className="bg-red-900/80 p-6 rounded-lg border-2 border-red-600">
+                <p className="text-red-200 font-bold text-center">⚠️ 警告 ⚠️</p>
+                <p className="text-red-300 text-sm mt-2 text-center">
+                  このおみくじは一度しか引けません。
+                  <br />
+                  引いた瞬間、このアプリは
+                  <span className="text-red-100 font-bold">自己破壊</span>
+                  します。
+                </p>
+              </div>
+
+              <button
+                onClick={drawFortune}
+                disabled={isDrawing}
+                className="px-12 py-4 text-xl font-bold bg-yellow-500 hover:bg-yellow-400 text-gray-900 rounded-lg transition-all hover:scale-105 animate-glow disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                禅みくじ
-              </Heading>
-              <Text color="gray.400" fontSize="sm">
-                ～ 一期一会のおみくじ ～
-              </Text>
-            </VStack>
+                {isDrawing ? '運命を占っています...' : '🎋 おみくじを引く'}
+              </button>
+            </div>
+          )}
 
-            {error && (
-              <Alert.Root status="error" borderRadius="md">
-                <Alert.Indicator />
-                <Box>
-                  <Alert.Title>エラー</Alert.Title>
-                  <Alert.Description>{error}</Alert.Description>
-                </Box>
-              </Alert.Root>
-            )}
-
-            {!fortune && !error && (
-              <VStack gap={6}>
-                <Box
-                  bg="red.900"
-                  p={6}
-                  borderRadius="lg"
-                  border="2px solid"
-                  borderColor="red.600"
+          {/* おみくじ結果 */}
+          {fortune && (
+            <div className="flex flex-col items-center gap-6">
+              <div
+                className="bg-gray-800 p-8 rounded-xl border-4 text-center min-w-[300px]"
+                style={{
+                  borderColor: fortune.color,
+                  boxShadow: `0 0 30px ${fortune.color}`,
+                }}
+              >
+                <div
+                  className="text-6xl font-black"
+                  style={{
+                    color: fortune.color,
+                    textShadow: `0 0 20px ${fortune.color}`,
+                  }}
                 >
-                  <Text color="red.200" fontWeight="bold" textAlign="center">
-                    ⚠️ 警告 ⚠️
-                  </Text>
-                  <Text color="red.300" fontSize="sm" mt={2} textAlign="center">
-                    このおみくじは一度しか引けません。
-                    <br />
-                    引いた瞬間、このアプリは
-                    <Text as="span" color="red.100" fontWeight="bold">
-                      自己破壊
-                    </Text>
-                    します。
-                  </Text>
-                </Box>
+                  {fortune.result}
+                </div>
+                <p className="text-gray-300 mt-4 text-lg">{fortune.message}</p>
+              </div>
 
-                <Button
-                  size="lg"
-                  colorPalette="yellow"
-                  onClick={drawFortune}
-                  loading={isDrawing}
-                  loadingText="運命を占っています..."
-                  css={css`
-                    animation: ${glow} 2s infinite;
-                    &:hover {
-                      transform: scale(1.05);
-                      animation: ${shake} 0.5s;
-                    }
-                  `}
-                  px={12}
-                  py={8}
-                  fontSize="xl"
-                >
-                  🎋 おみくじを引く
-                </Button>
-              </VStack>
-            )}
+              {isDestroying && (
+                <div className="text-center">
+                  <p className="text-red-400 text-lg font-bold">
+                    🔥 自己破壊シーケンス実行中... 🔥
+                  </p>
+                  <p className="text-gray-500 text-sm mt-2">
+                    ソースコードが削除されています...
+                  </p>
+                  <p className="text-gray-600 text-xs mt-4">さようなら...</p>
+                </div>
+              )}
+            </div>
+          )}
 
-            {fortune && (
-              <VStack gap={6}>
-                <Box
-                  bg="gray.800"
-                  p={8}
-                  borderRadius="xl"
-                  border="4px solid"
-                  borderColor={fortune.color}
-                  boxShadow={`0 0 30px ${fortune.color}`}
-                  textAlign="center"
-                  minW="300px"
-                >
-                  <Text
-                    fontSize="6xl"
-                    fontWeight="black"
-                    color={fortune.color}
-                    textShadow={`0 0 20px ${fortune.color}`}
-                  >
-                    {fortune.result}
-                  </Text>
-                  <Text color="gray.300" mt={4} fontSize="lg">
-                    {fortune.message}
-                  </Text>
-                </Box>
-
-                {isDestroying && (
-                  <Box textAlign="center">
-                    <Text color="red.400" fontSize="lg" fontWeight="bold">
-                      🔥 自己破壊シーケンス実行中... 🔥
-                    </Text>
-                    <Text color="gray.500" fontSize="sm" mt={2}>
-                      ソースコードが削除されています...
-                    </Text>
-                    <Text color="gray.600" fontSize="xs" mt={4}>
-                      さようなら...
-                    </Text>
-                  </Box>
-                )}
-              </VStack>
-            )}
-
-            <Text color="gray.600" fontSize="xs" mt={8}>
-              このアプリは一度しか使用できません
-            </Text>
-          </VStack>
-        </Container>
-      </Box>
-    </ChakraProvider>
+          <p className="text-gray-600 text-xs mt-8">
+            このアプリは一度しか使用できません
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 
