@@ -34,10 +34,10 @@ function App() {
       setFortune(data);
       setIsDrawing(false);
 
-      // 自己破壊アニメーション開始
+      // 自己破壊アニメーション開始（結果を見せてから1秒後）
       setTimeout(() => {
         setIsDestroying(true);
-      }, 3000);
+      }, 1000);
     } catch {
       setError('サーバーに接続できません。既に破壊されている可能性があります。');
       setIsDrawing(false);
